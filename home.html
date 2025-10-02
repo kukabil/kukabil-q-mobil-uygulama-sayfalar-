@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ana Sayfa</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.news-card, .user-post {
+  background-color: #111;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Yan menü stilleri */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background: #111;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+  transition: left 0.3s ease;
+  z-index: 999;
+}
+.side-menu.open { left: 0; }
+.side-menu a {
+  padding: 15px;
+  text-decoration: none;
+  color: white;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
+}
+.side-menu a:hover { background: #222; }
+.side-menu .logout {
+  margin-top: auto;
+  text-align: center;
+  background-color: #0d6efd;
+  color: white;
+}
+
+/* Alt menü */
+.bottom-nav button {
+  padding: 10px 15px;
+  font-size: 1.2rem;
+  margin: 5px;
+}
+
+/* Üst bar */
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #111;
+  padding: 10px;
+  z-index: 1000;
+}
+.top-bar .hamburger {
+  font-size: 1.5rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.top-bar input {
+  padding: 5px 10px;
+  width: 70%;
+  margin: 0 auto;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+/* Alt menü animasyonlu alt kategori */
+.sub-menu {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+  flex-direction: column;
+}
+.sub-menu a {
+  padding-left: 30px;
+}
+</style>
+</head>
+<body class="home-body">
+
+<div id="welcome-msg" class="welcome-msg"></div>
+
+<!-- Üst bar -->
+<div class="top-bar">
+  <button id="menu-toggle" class="hamburger">☰</button>
+  <input type="text" id="sayfa1" placeholder="Ara..." class="search-input">
+</div>
+
+
+<!-- Yan Menü -->
+<div id="sideMenu" class="side-menu">
+  <a data-target="haberler">Haberler</a>
+  <a data-target="bilgiler">Güncel Bilgiler / Bilimler</a>
+  <a id="kategori-btn">Kategoriler ▼</a>
+  <div id="kategori-submenu" class="sub-menu">
+    <a href="pages/kategoriler/kategori-bilim.html">Bilim</a>
+    <a href="pages/kategoriler/kategori-teknoloji.html">Teknoloji</a>
+    <a href="pages/kategoriler/kategori-sanat.html">Sanat</a>
+    <a href="pages/kategoriler/kategori-diğer.html">Diğer</a>
+  </div>
+  <a data-target="notdefteri">Not Defteri</a>
+  <a href="index.html" class="logout">Çıkış</a>
+</div>
+
+
+<!-- Asıl içerik -->
+<div id="mainContent" class="main-content">
+  <div id="page1" class="page"> 
+    <h2>Öne Çıkanlar</h2>
+    <div id="news-container"></div>
+  </div>
+  <div id="page2" class="page"> 
+    <h2>Gönderi Ekle</h2>
+    <form id="postForm" class="page2-form">
+      <input type="text" placeholder="Başlık" required>
+      <textarea placeholder="İçerik" rows="5" required></textarea>
+      <select required>
+        <option value="">Kategori Seçiniz</option>
+        <option value="bilim">Bilim</option>
+        <option value="teknoloji">Teknoloji</option>
+        <option value="sanat">Sanat</option>
+        <option value="diğer">Diğer</option>
+      </select>
+      <button type="submit" class="btn">Paylaş</button>
+    </form>
+  </div>
+  <div id="page3" class="page">
+    <h2>Keşfet</h2>
+    <div id="explore-container"></div>
+  </div>
+  <div id="notdefteri" class="page">
+    <h2>Not Defteri</h2>
+    <textarea id="notepad" placeholder="Notlarınızı buraya yazın..."></textarea><br>
+    <button id="saveNote">Kaydet</button>
+    <button id="clearNote">Temizle</button>
+    <p id="note-date"></p>
+  </div>
+</div>
+
+<!-- Alt menü -->
+<div class="bottom-nav">
+  <button id="btn-page1">^</button>
+  <button id="btn-page3">#</button>
+  <button id="btn-page2">+</button>
+  <button id="btn-page4">&</button>
+</div>
+
+<script>
+let fullname = localStorage.getItem("username") || "Kullanıcı";
+const welcomeMsg = document.getElementById('welcome-msg');
+const pages = document.querySelectorAll('.page');
+
+function hideAllPages(){ pages.forEach(p=>p.style.display='none'); }
+function showPage(pageId){ hideAllPages(); const page = document.getElementById(pageId); if(page) page.style.display='block'; }
+
+function showWelcomeMessage(){
+  hideAllPages();
+  welcomeMsg.textContent = `Hoşgeldin, ${fullname}!`;
+  welcomeMsg.style.display='block';
+  setTimeout(()=>{ welcomeMsg.style.display='none'; showPage('page1'); },2000);
+}
+
+// Hamburger menü aç/kapa
+const menuToggle = document.getElementById("menu-toggle");
+const sideMenu = document.getElementById("sideMenu");
+menuToggle.addEventListener("click",() => sideMenu.classList.toggle("open"));
+
+// Kategori alt menü animasyonu
+const kategoriBtn = document.getElementById("kategori-btn");
+const kategoriSubmenu = document.getElementById("kategori-submenu");
+kategoriBtn.addEventListener("click", ()=>{
+  if(kategoriSubmenu.style.maxHeight) kategoriSubmenu.style.maxHeight = null;
+  else kategoriSubmenu.style.maxHeight = kategoriSubmenu.scrollHeight + "px";
+});
+
+// Yan menü linkleri
+document.querySelectorAll("#sideMenu a[data-target]").forEach(link=>{
+  link.addEventListener("click", e=>{
+    e.preventDefault();
+    const target = link.getAttribute("data-target");
+    switch(target){
+      case "haberler": window.location.href = "haberler.html"; break;
+      case "bilgiler": window.location.href = "guncelbilgiler.html"; break;
+      case "notdefteri": window.location.href = "notdefteri.html"; break;
+    }
+    sideMenu.classList.remove("open");
+  });
+});
+
+// Alt menü
+document.getElementById('btn-page1').addEventListener('click', ()=>showPage('page1'));
+document.getElementById('btn-page2').addEventListener('click', ()=>showPage('page2'));
+document.getElementById('btn-page3').addEventListener('click', ()=>showPage('page3'));
+document.getElementById('btn-page4').addEventListener('click', ()=>showPage('page4'));
+
+// Gönderi paylaşma
+const postForm = document.getElementById('postForm');
+const exploreContainer = document.getElementById('explore-container');
+postForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  const title = postForm.querySelector('input').value;
+  const content = postForm.querySelector('textarea').value;
+  const category = postForm.querySelector('select').value;
+  const postHTML = `<div class="user-post"><h3>${title}</h3><p>${content}</p><small>Kategori: ${category}</small></div>`;
+  exploreContainer.innerHTML = postHTML + exploreContainer.innerHTML;
+  let userPosts = JSON.parse(localStorage.getItem("userPosts") || "[]");
+  userPosts.unshift({title, content, category, date:new Date().toLocaleString()});
+  localStorage.setItem("userPosts", JSON.stringify(userPosts));
+  postForm.reset();
+  showPage('page3');
+});
+
+
+
+// Not Defteri
+function openNotebook(){
+  hideAllPages();
+  const mainContent = document.getElementById('mainContent');
+  const page4 = mainContent.querySelector('#notdefteri');
+  page4.style.display='block';
+  const notepad = document.getElementById("notepad");
+  const savedNote = localStorage.getItem("userNote");
+  if(savedNote) notepad.value = savedNote;
+
+  const noteDate = document.getElementById("note-date");
+  document.getElementById("saveNote").addEventListener("click", ()=>{
+    const now = new Date();
+    const dateStr = now.toLocaleString();
+    localStorage.setItem("userNote", notepad.value);
+    localStorage.setItem("noteDate", dateStr);
+    noteDate.textContent = "Kaydedildi: " + dateStr;
+    alert("Not kaydedildi ✅");
+  });
+
+  document.getElementById("clearNote").addEventListener("click", ()=>{
+    localStorage.removeItem("userNote");
+    localStorage.removeItem("noteDate");
+    notepad.value="";
+    noteDate.textContent = "";
+    alert("Not defteri temizlendi 🗑️");
+  });
+
+  const savedDate = localStorage.getItem("noteDate");
+  if(savedDate) noteDate.textContent = "Kaydedildi: " + savedDate;
+}
+
+showWelcomeMessage();
+</script>
+</body>
+</html>

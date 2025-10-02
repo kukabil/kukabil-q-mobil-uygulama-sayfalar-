@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kukabilq - Hoşgeldin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="welcome-body">
+
+  <div class="welcome-container">
+    <!-- Sabit Logo -->
+    <div class="logo-container">
+      <img src="img/kukabilq-logo.png.jpg" alt="Kukabilq Logo" class="logo">
+    </div>
+
+    <!-- Seçenekler (butonlar) -->
+    <div class="buttons">
+      <button class="btn" onclick="goLogin()">Giriş Yap</button>
+      <button class="btn" onclick="goSignup()">Kayıt Ol</button>
+    </div>
+
+    <!-- Alt yazı -->
+    <p class="footer-text">
+      Devam etmek için <span class="continue" onclick="goHome()">tıklayınız</span>
+    </p>
+  </div>
+
+  <script>
+    function goLogin() {
+      window.location.href = "login.html"; // Giriş sayfası
+    }
+
+    function goSignup() {
+      window.location.href = "signup.html"; // Kayıt sayfası
+    }
+
+    function goHome() {
+      window.location.href = "home.html"; // Ana sayfa
+    }
+  </script>
+
+</body>
+</html>

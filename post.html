@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haber Detayı</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Haber Detayı</h1>
+        <a href="index.html">← Geri</a>
+    </header>
+
+    <main id="post-detail"></main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        async function loadPostDetail() {
+            let post;
+
+            // Supabase’den dene
+            const { data } = await supabase.from('posts').select('*').eq('id', postId);
+            if(data && data.length > 0){
+                post = data[0];
+            } else {
+                // LocalPosts fallback
+                post = localPosts.find(p => p.id == postId);
+            }
+
+            if(!post){
+                document.getElementById('post-detail').innerHTML = "<p>Yazı bulunamadı.</p>";
+                return;
+            }
+
+            document.getElementById('post-detail').innerHTML = `
+                <h2>${post.title}</h2>
+                <p><em>${post.date}</em> | <strong>${post.category}</strong> | Yazar: ${post.author}</p>
+                <p>${post.content}</p>
+            `;
+        }
+
+        loadPostDetail();
+    </script>
+</body>
+</html>

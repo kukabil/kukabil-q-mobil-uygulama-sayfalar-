@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kayıt Ol</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+
+  <div class="auth-container">
+    <!-- Logo -->
+    <img src="img/kukabilq-logo.png.jpg" alt="Kukabilq Logo" class="auth-logo">
+
+    <!-- Form -->
+    <form class="auth-form" onsubmit="signupUser(event)">
+      <label for="name">İsim Soyisim</label>
+      <input type="text" id="name" required>
+
+      <label for="password">Şifre</label>
+      <input type="password" id="password" required>
+
+      <label for="confirm">Şifre Tekrar</label>
+      <input type="password" id="confirm" required>
+
+      <button type="submit">Kayıt Ol</button>
+    </form>
+  </div>
+
+  <script>
+    function signupUser(event) {
+      event.preventDefault();
+      const name = document.getElementById("name").value;
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+
+      if (password !== confirm) {
+        alert("Şifreler uyuşmuyor!");
+        return;
+      }
+
+      // Kullanıcı kaydet (localStorage)
+      localStorage.setItem("username", name);
+      localStorage.setItem("password", password);
+
+      location.href = "home.html"; // Ana sayfaya yönlendir
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kendi Paylaşımlarım</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="home-body">
+
+<h2>Kendi Paylaşımlarım</h2>
+<div id="user-posts-container"></div>
+<button id="settings-btn" class="settings-btn">⚙️</button>
+
+<div class="bottom-nav">
+  <button onclick="window.location.href='home.html'">^</button>
+  <button onclick="window.location.href='home.html'">#</button>
+  <button onclick="window.location.href='home.html'">+</button>
+  <button>&</button> <!-- & butonu artık hiçbir işlem yapmaz -->
+</div>
+
+<script>
+const userPostsContainer = document.getElementById('user-posts-container');
+const posts = JSON.parse(localStorage.getItem("userPosts") || "[]");
+
+posts.forEach(post=>{
+  const div = document.createElement('div');
+  div.className = 'user-post';
+  div.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p><small>Kategori: ${post.category}</small></div>`;
+  userPostsContainer.appendChild(div);
+});
+
+// Ayarlar butonu
+document.getElementById('settings-btn').addEventListener('click', ()=>{
+  window.location.href = "sayfa5.html";
+});
+</script>
+
+</body>
+</html>

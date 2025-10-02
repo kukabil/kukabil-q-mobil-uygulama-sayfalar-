@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giriş Yap</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+
+  <div class="auth-container">
+    <!-- Logo -->
+    <img src="img/kukabilq-logo.png.jpg" alt="Kukabilq Logo" class="auth-logo">
+
+    <!-- Form -->
+    <form class="auth-form" onsubmit="loginUser(event)">
+      <label for="name">İsim Soyisim</label>
+      <input type="text" id="name" placeholder="Adınızı girin" required>
+
+      <label for="password">Şifre</label>
+      <input type="password" id="password" placeholder="Şifrenizi girin" required>
+
+      <button type="submit">Giriş Yap</button>
+    </form>
+  </div>
+
+  <script>
+    function loginUser(event) {
+      event.preventDefault();
+      // Kullanıcı adını kaydet
+      const name = document.getElementById("name").value.trim();
+      if(name) {
+        localStorage.setItem("username", name);
+        location.href = "home.html"; // Ana sayfaya yönlendir
+      } else {
+        alert("Lütfen adınızı girin!");
+      }
+    }
+  </script>
+
+</body>
+</html>

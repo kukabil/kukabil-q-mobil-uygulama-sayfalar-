@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Not Defteri</title>
+<link rel="stylesheet" href="style.css">
+<style>
+#notepad {
+  width: 90%;
+  height: 300px;
+  margin: 20px auto;
+  display: block;
+  background-color: #111;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 10px;
+}
+#note-date {
+  text-align: center;
+  margin-top: 10px;
+  color: #aaa;
+}
+button {
+  margin: 5px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<h2 style="text-align:center;">Not Defteri</h2>
+<textarea id="notepad" placeholder="Notlarını buraya yaz..."></textarea>
+<br>
+<button id="saveNote">Kaydet</button>
+<button id="clearNote">Temizle</button>
+<p id="note-date"></p>
+
+<script>
+// Not defteri: localStorage ile kaydetme, temizleme, tarih-saat gösterme
+const notepad = document.getElementById("notepad");
+const savedNoteData = JSON.parse(localStorage.getItem("userNote") || "{}");
+
+if(savedNoteData.text) notepad.value = savedNoteData.text;
+if(savedNoteData.date) document.getElementById("note-date").textContent = "Son kaydedilen: " + savedNoteData.date;
+
+document.getElementById("saveNote").addEventListener("click", () => {
+    const now = new Date();
+    const dateStr = now.toLocaleString();
+    localStorage.setItem("userNote", JSON.stringify({text: notepad.value, date: dateStr}));
+    document.getElementById("note-date").textContent = "Son kaydedilen: " + dateStr;
+    alert("Not kaydedildi ✅");
+});
+
+document.getElementById("clearNote").addEventListener("click", () => {
+    localStorage.removeItem("userNote");
+    notepad.value = "";
+    document.getElementById("note-date").textContent = "";
+    alert("Not defteri temizlendi 🗑️");
+});
+</script>
+</body>
+</html>
